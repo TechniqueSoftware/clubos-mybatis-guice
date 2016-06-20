@@ -15,8 +15,18 @@
  */
 package org.mybatis.guice.configuration;
 
-import com.google.inject.ProvisionException;
+import java.util.Collections;
+import java.util.Map;
+import java.util.Set;
+
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Provider;
+import javax.inject.Singleton;
+import javax.sql.DataSource;
+
 import org.apache.ibatis.executor.ErrorContext;
+import org.apache.ibatis.executor.loader.ProxyFactory;
 import org.apache.ibatis.mapping.DatabaseIdProvider;
 import org.apache.ibatis.mapping.Environment;
 import org.apache.ibatis.plugin.Interceptor;
@@ -26,14 +36,7 @@ import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.type.TypeHandler;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.inject.Provider;
-import javax.inject.Singleton;
-import javax.sql.DataSource;
-import java.util.Collections;
-import java.util.Map;
-import java.util.Set;
+import com.google.inject.ProvisionException;
 
 /**
  * Provides the myBatis Configuration.
@@ -83,7 +86,15 @@ public final class ConfigurationProvider implements Provider<Configuration> {
     @com.google.inject.Inject(optional = true)
     @Named("mybatis.configuration.failFast")
     private boolean failFast = false;
+    
+    @com.google.inject.Inject(optional = true)
+    @Named("mybatis.configuration.callSettersOnNulls")
+    private boolean callSettersOnNulls = false;
 
+    @com.google.inject.Inject(optional = true)
+    @Named("mybatis.configuration.proxyFactory")
+    private ProxyFactory proxyFactory = null;
+    
     @Inject
     private ObjectFactory objectFactory;
 
@@ -193,6 +204,10 @@ public final class ConfigurationProvider implements Provider<Configuration> {
     public void setFailFast(boolean failFast) {
         this.failFast = failFast;
     }
+    
+    public void setCallSettersOnNulls(boolean callSettersOnNulls) {
+      this.callSettersOnNulls = callSettersOnNulls;
+    }
 
     /**
      * Adds the user defined type aliases to the myBatis Configuration.
@@ -265,6 +280,11 @@ public final class ConfigurationProvider implements Provider<Configuration> {
         configuration.setAutoMappingBehavior(autoMappingBehavior);
         configuration.setObjectFactory(objectFactory);
         configuration.setMapUnderscoreToCamelCase( mapUnderscoreToCamelCase );
+        configuration.setCallSettersOnNulls(callSettersOnNulls);
+        
+        if(proxyFactory != null){
+          configuration.setProxyFactory(proxyFactory);
+        }
 
         try {
             if (databaseIdProvider != null) {

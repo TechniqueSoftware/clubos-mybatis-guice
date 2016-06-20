@@ -24,11 +24,11 @@
     <version>22-SNAPSHOT</version>
   </parent>
 
-  <artifactId>mybatis-guice</artifactId>
-  <version>3.7-SNAPSHOT</version>
+  <artifactId>clubos-mybatis-guice</artifactId>
+  <version>3.6.1</version>
   <packaging>jar</packaging>
 
-  <name>mybatis-guice</name>
+  <name>clubos-mybatis-guice</name>
   <description>The MyBatis Guice module is easy-to-use Google Guice bridge for MyBatis sql mapping framework.</description>
   <url>http://www.mybatis.org/guice/</url>
 
@@ -163,6 +163,13 @@
   </dependencies>
 
   <build>
+    <extensions>
+      <extension>
+        <groupId>org.springframework.build</groupId>
+        <artifactId>aws-maven</artifactId>
+        <version>5.0.0.RELEASE</version>
+      </extension>
+    </extensions>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
