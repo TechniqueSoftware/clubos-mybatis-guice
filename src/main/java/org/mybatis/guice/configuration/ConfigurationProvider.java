@@ -208,6 +208,10 @@ public final class ConfigurationProvider implements Provider<Configuration> {
     public void setCallSettersOnNulls(boolean callSettersOnNulls) {
       this.callSettersOnNulls = callSettersOnNulls;
     }
+    
+    public void setProxyFactory(ProxyFactory proxyFactory){
+      this.proxyFactory = proxyFactory;
+    }
 
     /**
      * Adds the user defined type aliases to the myBatis Configuration.
